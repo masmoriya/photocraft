@@ -41,7 +41,7 @@ jobs:
       date: ${{ steps.v.outputs.date }}
       prerelease: ${{ steps.v.outputs.prerelease }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - id: v
         name: Resolve version
         run: |
@@ -69,11 +69,11 @@ jobs:
       PHOTOCRAFT_VERSION: ${{ needs.version.outputs.version }}
       PHOTOCRAFT_BUILD_DATE: ${{ needs.version.outputs.date }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
         with:
           targets: aarch64-apple-darwin, x86_64-apple-darwin
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           key: release-macos-universal
       - name: Apply version override
@@ -100,7 +100,7 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: packaging/macos/verify.sh --arch universal
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-macos
           path: dist/release/*
@@ -128,11 +128,11 @@ jobs:
       PHOTOCRAFT_VERSION: ${{ needs.version.outputs.version }}
       PHOTOCRAFT_BUILD_DATE: ${{ needs.version.outputs.date }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
         with:
           targets: ${{ matrix.target }}
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           key: release-windows-${{ matrix.arch }}
       - name: Apply version override
@@ -154,7 +154,7 @@ jobs:
           AZURE_SIGNING_ACCOUNT: ${{ secrets.AZURE_SIGNING_ACCOUNT }}
           AZURE_CERT_PROFILE: ${{ secrets.AZURE_CERT_PROFILE }}
         run: ./packaging/windows/package.ps1 -Arch ${{ matrix.arch }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-windows-${{ matrix.arch }}
           path: dist/release/*
@@ -178,7 +178,7 @@ jobs:
       PHOTOCRAFT_BUILD_DATE: ${{ needs.version.outputs.date }}
       NFPM_VERSION: 2.47.0
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Install build and packaging tools
         run: |
           sudo apt-get update
@@ -188,8 +188,8 @@ jobs:
           curl -fsSL -o "$RUNNER_TEMP/nfpm.deb" \
             "https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_${{ matrix.deb }}.deb"
           sudo dpkg -i "$RUNNER_TEMP/nfpm.deb"
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           key: release-linux-${{ matrix.arch }}
       - name: Apply version override
@@ -207,7 +207,7 @@ jobs:
             chmod +x "$appimage"
             APPIMAGE_EXTRACT_AND_RUN=1 "$appimage" --version
           done
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-linux-${{ matrix.arch }}
           path: dist/release/*
@@ -230,8 +230,8 @@ jobs:
       PHOTOCRAFT_VERSION: ${{ needs.version.outputs.version }}
       PHOTOCRAFT_BUILD_DATE: ${{ needs.version.outputs.date }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           name: release-linux-${{ matrix.arch }}
           path: dist/linux
@@ -245,7 +245,7 @@ jobs:
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       - name: Build the Flatpak bundle
         run: packaging/linux/flatpak-bundle.sh "dist/linux/photocraft-$PHOTOCRAFT_VERSION-linux-${{ matrix.arch }}.tar.gz"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-flatpak-${{ matrix.arch }}
           path: dist/release/*.flatpak
@@ -263,7 +263,7 @@ jobs:
       PHOTOCRAFT_VERSION: ${{ needs.version.outputs.version }}
       PHOTOCRAFT_BUILD_DATE: ${{ needs.version.outputs.date }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - name: Build and package in a FreeBSD VM (tar.gz)
         # vmactions/freebsd-vm v1.5.9, pinned by commit (it runs our build).
         uses: vmactions/freebsd-vm@c46abacb49f09938ca4e1702d15d836285d694cc
@@ -289,7 +289,7 @@ jobs:
             bash packaging/freebsd/package.sh
             tar -tzf dist/release/photocraft-*-freebsd-x86_64.tar.gz \
               | grep -E '/bin/photocraft$|/bin/photocraft-cli$|/share/applications/ai\.storyteller\.photocraft\.desktop$|/share/doc/photocraft/LICENSE-MIT$'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-freebsd-x86_64
           path: dist/release/*
@@ -305,11 +305,11 @@ jobs:
       PHOTOCRAFT_BUILD_DATE: ${{ needs.version.outputs.date }}
       TRUNK_VERSION: 0.21.14
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
         with:
           targets: wasm32-unknown-unknown
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           key: release-web
       - name: Install trunk
@@ -322,7 +322,7 @@ jobs:
         run: cargo xtask version set "$PHOTOCRAFT_VERSION"
       - name: Build and zip
         run: packaging/web/package.sh
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: release-web
           path: dist/release/*
@@ -341,7 +341,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GH_REPO: ${{ github.repository }}
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           pattern: release-*
           path: artifacts
